@@ -215,6 +215,11 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -268,6 +273,11 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">hash::Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">PoolRotator</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// New rotator instance with specified ban time.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ban_time</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
+		<span class="self">Self</span> { <span class="ident">ban_time</span>, <span class="ident">banned_until</span>: <span class="ident">Default::default</span>() }
+	}
+
 	<span class="doccomment">/// Returns `true` if extrinsic hash is currently banned.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_banned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>) -&gt; <span class="ident">bool</span> {
 		<span class="self">self</span>.<span class="ident">banned_until</span>.<span class="ident">read</span>().<span class="ident">contains_key</span>(<span class="ident">hash</span>)

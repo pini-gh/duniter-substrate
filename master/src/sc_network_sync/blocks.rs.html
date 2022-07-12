@@ -405,6 +405,38 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -587,6 +619,9 @@
 
 	<span class="doccomment">/// Get a valid chain of blocks ordered in descending order and ready for importing into</span>
 	<span class="doccomment">/// the blockchain.</span>
+	<span class="doccomment">/// `from` is the maximum block number for the start of the range that we are interested in.</span>
+	<span class="doccomment">/// The function will return empty Vec if the first block ready is higher than `from`.</span>
+	<span class="doccomment">/// For each returned block hash `clear_queued` must be called at some later stage.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ready_blocks</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">from</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
@@ -599,6 +634,10 @@
 				<span class="ident">BlockRangeState::Complete</span>(<span class="ident">blocks</span>) =&gt; {
 					<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> (<span class="ident">blocks</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>();
 					<span class="ident">prev</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> <span class="ident">len</span>;
+					<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">BlockData</span> { <span class="ident">block</span>, .. }) <span class="op">=</span> <span class="ident">blocks</span>.<span class="ident">first</span>() {
+						<span class="self">self</span>.<span class="ident">queued_blocks</span>
+							.<span class="ident">insert</span>(<span class="ident">block</span>.<span class="ident">hash</span>, (<span class="ident">start</span>, <span class="ident">start</span> <span class="op">+</span> (<span class="ident">blocks</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>()));
+					}
 					<span class="comment">// Remove all elements from `blocks` and add them to `ready`</span>
 					<span class="ident">ready</span>.<span class="ident">append</span>(<span class="ident">blocks</span>);
 					<span class="ident">len</span>
@@ -608,18 +647,12 @@
 			};
 			<span class="kw-2">*</span><span class="ident">range_data</span> <span class="op">=</span> <span class="ident">BlockRangeState::Queued</span> { <span class="ident">len</span> };
 		}
-
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">BlockData</span> { <span class="ident">block</span>, .. }) <span class="op">=</span> <span class="ident">ready</span>.<span class="ident">first</span>() {
-			<span class="self">self</span>.<span class="ident">queued_blocks</span>
-				.<span class="ident">insert</span>(<span class="ident">block</span>.<span class="ident">hash</span>, (<span class="ident">from</span>, <span class="ident">from</span> <span class="op">+</span> (<span class="ident">ready</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>()));
-		}
-
 		<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;sync&quot;</span>, <span class="string">&quot;{} blocks ready for import&quot;</span>, <span class="ident">ready</span>.<span class="ident">len</span>());
 		<span class="ident">ready</span>
 	}
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_queued</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">from_hash</span>: <span class="kw-2">&amp;</span><span class="ident">B::Hash</span>) {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">from</span>, <span class="ident">to</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">queued_blocks</span>.<span class="ident">remove</span>(<span class="ident">from_hash</span>) {
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_queued</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">B::Hash</span>) {
+		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">from</span>, <span class="ident">to</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">queued_blocks</span>.<span class="ident">remove</span>(<span class="ident">hash</span>) {
 			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">block_num</span> <span class="op">=</span> <span class="ident">from</span>;
 			<span class="kw">while</span> <span class="ident">block_num</span> <span class="op">&lt;</span> <span class="ident">to</span> {
 				<span class="self">self</span>.<span class="ident">blocks</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">block_num</span>);
@@ -805,6 +838,37 @@
 		);
 
 		<span class="macro">assert_eq!</span>(<span class="ident">bc</span>.<span class="ident">needed_blocks</span>(<span class="ident">peer</span>.<span class="ident">clone</span>(), <span class="number">5</span>, <span class="number">50</span>, <span class="number">39</span>, <span class="number">0</span>, <span class="number">200</span>), <span class="prelude-val">Some</span>(<span class="number">45</span>..<span class="number">50</span>));
+	}
+
+	<span class="attribute">#[<span class="ident">test</span>]</span>
+	<span class="kw">fn</span> <span class="ident">clear_queued_subsequent_ranges</span>() {
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bc</span> <span class="op">=</span> <span class="ident">BlockCollection::new</span>();
+		<span class="macro">assert!</span>(<span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="ident">bc</span>));
+		<span class="kw">let</span> <span class="ident">peer</span> <span class="op">=</span> <span class="ident">PeerId::random</span>();
+
+		<span class="kw">let</span> <span class="ident">blocks</span> <span class="op">=</span> <span class="ident">generate_blocks</span>(<span class="number">10</span>);
+
+		<span class="comment">// Request 2 ranges</span>
+		<span class="macro">assert_eq!</span>(<span class="ident">bc</span>.<span class="ident">needed_blocks</span>(<span class="ident">peer</span>.<span class="ident">clone</span>(), <span class="number">5</span>, <span class="number">50</span>, <span class="number">39</span>, <span class="number">0</span>, <span class="number">200</span>), <span class="prelude-val">Some</span>(<span class="number">40</span>..<span class="number">45</span>));
+		<span class="macro">assert_eq!</span>(<span class="ident">bc</span>.<span class="ident">needed_blocks</span>(<span class="ident">peer</span>.<span class="ident">clone</span>(), <span class="number">5</span>, <span class="number">50</span>, <span class="number">39</span>, <span class="number">0</span>, <span class="number">200</span>), <span class="prelude-val">Some</span>(<span class="number">45</span>..<span class="number">50</span>));
+
+		<span class="comment">// got a response on the request for `40..50`</span>
+		<span class="ident">bc</span>.<span class="ident">clear_peer_download</span>(<span class="kw-2">&amp;</span><span class="ident">peer</span>);
+		<span class="ident">bc</span>.<span class="ident">insert</span>(<span class="number">40</span>, <span class="ident">blocks</span>.<span class="ident">to_vec</span>(), <span class="ident">peer</span>.<span class="ident">clone</span>());
+
+		<span class="comment">// request any blocks starting from 1000 or lower.</span>
+		<span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">bc</span>.<span class="ident">ready_blocks</span>(<span class="number">1000</span>);
+		<span class="macro">assert_eq!</span>(
+			<span class="ident">ready</span>,
+			<span class="ident">blocks</span>
+				.<span class="ident">iter</span>()
+				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">BlockData</span> { <span class="ident">block</span>: <span class="ident">b</span>.<span class="ident">clone</span>(), <span class="ident">origin</span>: <span class="prelude-val">Some</span>(<span class="ident">peer</span>.<span class="ident">clone</span>()) })
+				.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+		);
+
+		<span class="ident">bc</span>.<span class="ident">clear_queued</span>(<span class="kw-2">&amp;</span><span class="ident">blocks</span>[<span class="number">0</span>].<span class="ident">hash</span>);
+		<span class="macro">assert!</span>(<span class="ident">bc</span>.<span class="ident">blocks</span>.<span class="ident">is_empty</span>());
+		<span class="macro">assert!</span>(<span class="ident">bc</span>.<span class="ident">queued_blocks</span>.<span class="ident">is_empty</span>());
 	}
 }
 </code></pre></div>
