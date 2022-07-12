@@ -532,7 +532,7 @@
 <span class="doccomment">/// can prioritize shorter chains over longer ones, the vote may be</span>
 <span class="doccomment">/// closer to the best block than N.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeforeBestBlockBy</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="ident">N</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeforeBestBlockBy</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">N</span>);
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">VotingRule</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BeforeBestBlockBy</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">Block</span>: <span class="ident">BlockT</span>,

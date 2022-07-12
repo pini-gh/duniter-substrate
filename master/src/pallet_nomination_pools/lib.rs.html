@@ -2470,6 +2470,19 @@
 <span id="2465">2465</span>
 <span id="2466">2466</span>
 <span id="2467">2467</span>
+<span id="2468">2468</span>
+<span id="2469">2469</span>
+<span id="2470">2470</span>
+<span id="2471">2471</span>
+<span id="2472">2472</span>
+<span id="2473">2473</span>
+<span id="2474">2474</span>
+<span id="2475">2475</span>
+<span id="2476">2476</span>
+<span id="2477">2477</span>
+<span id="2478">2478</span>
+<span id="2479">2479</span>
+<span id="2480">2480</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -2788,7 +2801,7 @@
 		<span class="ident">Currency</span>, <span class="ident">Defensive</span>, <span class="ident">DefensiveOption</span>, <span class="ident">DefensiveResult</span>, <span class="ident">DefensiveSaturating</span>,
 		<span class="ident">ExistenceRequirement</span>, <span class="ident">Get</span>,
 	},
-	<span class="ident">CloneNoBound</span>, <span class="ident">DefaultNoBound</span>, <span class="ident">RuntimeDebugNoBound</span>,
+	<span class="ident">transactional</span>, <span class="ident">CloneNoBound</span>, <span class="ident">DefaultNoBound</span>, <span class="ident">RuntimeDebugNoBound</span>,
 };
 <span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
 <span class="kw">use</span> <span class="ident">sp_core::U256</span>;
@@ -3884,6 +3897,7 @@
 		<span class="doccomment">///   `existential deposit + amount` in their account.</span>
 		<span class="doccomment">/// * Only a pool with [`PoolState::Open`] can be joined</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::join</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="attribute">#[<span class="ident">pallet::compact</span>]</span> <span class="ident">amount</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
@@ -3944,6 +3958,7 @@
 			<span class="ident">T::WeightInfo::bond_extra_transfer</span>()
 			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::bond_extra_reward</span>())
 		)]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bond_extra</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">extra</span>: <span class="ident">BondExtra</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
 			<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">member</span>, <span class="kw-2">mut</span> <span class="ident">bonded_pool</span>, <span class="kw-2">mut</span> <span class="ident">reward_pool</span>) <span class="op">=</span> <span class="ident"><span class="self">Self</span>::get_member_with_pools</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>)<span class="question-mark">?</span>;
@@ -3982,6 +3997,7 @@
 		<span class="doccomment">/// The member will earn rewards pro rata based on the members stake vs the sum of the</span>
 		<span class="doccomment">/// members in the pools stake. Rewards do not &quot;expire&quot;.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::claim_payout</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">claim_payout</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
 			<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">member</span>, <span class="kw-2">mut</span> <span class="ident">bonded_pool</span>, <span class="kw-2">mut</span> <span class="ident">reward_pool</span>) <span class="op">=</span> <span class="ident"><span class="self">Self</span>::get_member_with_pools</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>)<span class="question-mark">?</span>;
@@ -4021,6 +4037,7 @@
 		<span class="doccomment">/// there are too many unlocking chunks, the result of this call will likely be the</span>
 		<span class="doccomment">/// `NoMoreChunks` error from the staking system.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::unbond</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unbond</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">member_account</span>: <span class="ident">T::AccountId</span>,
@@ -4098,6 +4115,7 @@
 		<span class="doccomment">/// would probably see an error like `NoMoreChunks` emitted from the staking system when</span>
 		<span class="doccomment">/// they attempt to unbond.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::pool_withdraw_unbonded</span>(<span class="kw-2">*</span><span class="ident">num_slashing_spans</span>))]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pool_withdraw_unbonded</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
@@ -4134,6 +4152,7 @@
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(
 			<span class="ident">T::WeightInfo::withdraw_unbonded_kill</span>(<span class="kw-2">*</span><span class="ident">num_slashing_spans</span>)
 		)]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">withdraw_unbonded</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">member_account</span>: <span class="ident">T::AccountId</span>,
@@ -4259,6 +4278,7 @@
 		<span class="doccomment">/// In addition to `amount`, the caller will transfer the existential deposit; so the caller</span>
 		<span class="doccomment">/// needs at have at least `amount + existential_deposit` transferrable.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::create</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="attribute">#[<span class="ident">pallet::compact</span>]</span> <span class="ident">amount</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
@@ -4347,6 +4367,7 @@
 		<span class="doccomment">/// This directly forward the call to the staking pallet, on behalf of the pool bonded</span>
 		<span class="doccomment">/// account.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::nominate</span>(<span class="ident">validators</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>))]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nominate</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
@@ -4363,6 +4384,7 @@
 		<span class="doccomment">/// The dispatch origin of this call must be signed by the state toggler, or the root role</span>
 		<span class="doccomment">/// of the pool.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::set_state</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_state</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
@@ -4393,6 +4415,7 @@
 		<span class="doccomment">/// The dispatch origin of this call must be signed by the state toggler, or the root role</span>
 		<span class="doccomment">/// of the pool.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::set_metadata</span>(<span class="ident">metadata</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>))]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_metadata</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
@@ -4424,6 +4447,7 @@
 		<span class="doccomment">/// * `max_members` - Set [`MaxPoolMembers`].</span>
 		<span class="doccomment">/// * `max_members_per_pool` - Set [`MaxPoolMembersPerPool`].</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::set_configs</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_configs</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">min_join_bond</span>: <span class="ident">ConfigOp</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -4460,6 +4484,7 @@
 		<span class="doccomment">/// It emits an event, notifying UIs of the role change. This event is quite relevant to</span>
 		<span class="doccomment">/// most pool members and they should be informed of changes to pool roles.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::update_roles</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_roles</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
@@ -4512,6 +4537,7 @@
 		<span class="doccomment">/// This directly forward the call to the staking pallet, on behalf of the pool bonded</span>
 		<span class="doccomment">/// account.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::chill</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chill</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">pool_id</span>: <span class="ident">PoolId</span>) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
 			<span class="kw">let</span> <span class="ident">bonded_pool</span> <span class="op">=</span> <span class="ident">BondedPool</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">pool_id</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::PoolNotFound</span>)<span class="question-mark">?</span>;
