@@ -440,7 +440,6 @@
 <span id="435">435</span>
 <span id="436">436</span>
 <span id="437">437</span>
-<span id="438">438</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -464,9 +463,8 @@
 <span class="kw">use</span> <span class="ident">futures::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">libp2p</span>::{
 	<span class="ident">core</span>::{
-		<span class="ident">connection</span>::{<span class="ident">ConnectionId</span>, <span class="ident">ListenerId</span>},
-		<span class="ident">either::EitherOutput</span>,
-		<span class="ident">ConnectedPoint</span>, <span class="ident">PeerId</span>, <span class="ident">PublicKey</span>,
+		<span class="ident">connection::ConnectionId</span>, <span class="ident">either::EitherOutput</span>, <span class="ident">transport::ListenerId</span>, <span class="ident">ConnectedPoint</span>,
+		<span class="ident">PeerId</span>, <span class="ident">PublicKey</span>,
 	},
 	<span class="ident">identify</span>::{<span class="ident">Identify</span>, <span class="ident">IdentifyConfig</span>, <span class="ident">IdentifyEvent</span>, <span class="ident">IdentifyInfo</span>},
 	<span class="ident">ping</span>::{<span class="ident">Ping</span>, <span class="ident">PingConfig</span>, <span class="ident">PingEvent</span>, <span class="ident">PingSuccess</span>},

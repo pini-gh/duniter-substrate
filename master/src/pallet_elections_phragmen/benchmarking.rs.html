@@ -497,72 +497,6 @@
 <span id="492">492</span>
 <span id="493">493</span>
 <span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -587,17 +521,12 @@
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">use</span> <span class="ident">frame_benchmarking</span>::{<span class="ident">account</span>, <span class="ident">benchmarks</span>, <span class="ident">whitelist</span>, <span class="ident">BenchmarkError</span>, <span class="ident">BenchmarkResult</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">dispatch</span>::{<span class="ident">DispatchResultWithPostInfo</span>, <span class="ident">UnfilteredDispatchable</span>},
-	<span class="ident">traits::OnInitialize</span>,
-};
+<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">dispatch::DispatchResultWithPostInfo</span>, <span class="ident">traits::OnInitialize</span>};
 <span class="kw">use</span> <span class="ident">frame_system::RawOrigin</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Pallet</span> <span class="kw">as</span> <span class="ident">Elections</span>;
 
 <span class="kw">const</span> <span class="ident">BALANCE_FACTOR</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">250</span>;
-<span class="kw">const</span> <span class="ident">MAX_VOTERS</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">500</span>;
-<span class="kw">const</span> <span class="ident">MAX_CANDIDATES</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">200</span>;
 
 <span class="kw">type</span> <span class="ident">Lookup</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Lookup</span> <span class="kw">as</span> <span class="ident">StaticLookup</span><span class="op">&gt;</span><span class="ident">::Source</span>;
 
@@ -910,38 +839,6 @@
 		))<span class="question-mark">?</span>;
 	}
 
-	<span class="comment">// -- Root ones</span>
-	<span class="attribute">#[<span class="ident">extra</span>]</span> <span class="comment">// this calls into phragmen and consumes a full block for now.</span>
-	<span class="ident">remove_member_without_replacement_extra</span> {
-		<span class="comment">// worse case is when we remove a member and we have no runner as a replacement. This</span>
-		<span class="comment">// triggers phragmen again. The only parameter is how many candidates will compete for the</span>
-		<span class="comment">// new slot.</span>
-		<span class="kw">let</span> <span class="ident">c</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_CANDIDATES</span>;
-		<span class="ident">clean</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
-
-		<span class="comment">// fill only desired members. no runners-up.</span>
-		<span class="kw">let</span> <span class="ident">all_members</span> <span class="op">=</span> <span class="ident">fill_seats_up_to</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">T::DesiredMembers::get</span>())<span class="question-mark">?</span>;
-		<span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">T::DesiredMembers::get</span>());
-
-		<span class="comment">// submit a new one to compensate, with self-vote.</span>
-		<span class="kw">let</span> <span class="ident">replacements</span> <span class="op">=</span> <span class="ident">submit_candidates_with_self_vote</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">c</span>, <span class="string">&quot;new_candidate&quot;</span>)<span class="question-mark">?</span>;
-
-		<span class="comment">// create some voters for these replacements.</span>
-		<span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">replacements</span>, <span class="ident">MAX_VOTERS</span>, <span class="ident">MAXIMUM_VOTE</span>)<span class="question-mark">?</span>;
-
-		<span class="kw">let</span> <span class="ident">to_remove</span> <span class="op">=</span> <span class="ident">as_lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">all_members</span>[<span class="number">0</span>].<span class="ident">clone</span>());
-	}: <span class="ident">remove_member</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">to_remove</span>, <span class="bool-val">false</span>)
-	<span class="ident">verify</span> {
-		<span class="comment">// must still have the desired number of members members.</span>
-		<span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">T::DesiredMembers::get</span>());
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-		{
-			<span class="comment">// reset members in between benchmark tests.</span>
-			<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tests::MEMBERS</span>;
-			<span class="ident">MEMBERS</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">m</span>.<span class="ident">borrow_mut</span>() <span class="op">=</span> <span class="macro">vec!</span>[]);
-		}
-	}
-
 	<span class="ident">remove_member_with_replacement</span> {
 		<span class="comment">// easy case. We have a runner up. Nothing will have that much of an impact. m will be</span>
 		<span class="comment">// number of members and runners. There is always at least one runner.</span>
@@ -950,43 +847,10 @@
 
 		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fill_seats_up_to</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">m</span>)<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="ident">removing</span> <span class="op">=</span> <span class="ident">as_lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members_ids</span>()[<span class="number">0</span>].<span class="ident">clone</span>());
-	}: <span class="ident">remove_member</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">removing</span>, <span class="bool-val">true</span>)
+	}: <span class="ident">remove_member</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">removing</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>)
 	<span class="ident">verify</span> {
 		<span class="comment">// must still have enough members.</span>
 		<span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">T::DesiredMembers::get</span>());
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-		{
-			<span class="comment">// reset members in between benchmark tests.</span>
-			<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tests::MEMBERS</span>;
-			<span class="ident">MEMBERS</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">m</span>.<span class="ident">borrow_mut</span>() <span class="op">=</span> <span class="macro">vec!</span>[]);
-		}
-	}
-
-	<span class="ident">remove_member_wrong_refund</span> {
-		<span class="comment">// The root call by mistake indicated that this will have no replacement, while it has!</span>
-		<span class="comment">// this has now consumed a lot of weight and need to refund.</span>
-		<span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">T::DesiredMembers::get</span>() <span class="op">+</span> <span class="ident">T::DesiredRunnersUp::get</span>();
-		<span class="ident">clean</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
-
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fill_seats_up_to</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">m</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">removing</span> <span class="op">=</span> <span class="ident">as_lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members_ids</span>()[<span class="number">0</span>].<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">T::Lookup::lookup</span>(<span class="ident">removing</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;member was added above&quot;</span>);
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::remove_member</span> { <span class="ident">who</span>: <span class="ident">removing</span>, <span class="ident">has_replacement</span>: <span class="bool-val">false</span> }.<span class="ident">encode</span>();
-	}: {
-		<span class="macro">assert_eq!</span>(
-			<span class="op">&lt;</span><span class="ident">Call</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">call</span>)
-				.<span class="ident">expect</span>(<span class="string">&quot;call is encoded above, encoding must be correct&quot;</span>)
-				.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">RawOrigin::Root</span>.<span class="ident">into</span>())
-				.<span class="ident">unwrap_err</span>()
-				.<span class="ident">error</span>,
-			<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InvalidReplacement</span>.<span class="ident">into</span>(),
-		);
-	}
-	<span class="ident">verify</span> {
-		<span class="comment">// must still have enough members.</span>
-		<span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">T::DesiredMembers::get</span>());
-		<span class="comment">// on fail, `who` must still be a member</span>
-		<span class="macro">assert!</span>(<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::members_ids</span>().<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>));
 		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 		{
 			<span class="comment">// reset members in between benchmark tests.</span>
@@ -1004,7 +868,7 @@
 		<span class="comment">// remove any previous stuff.</span>
 		<span class="ident">clean</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
 
-		<span class="kw">let</span> <span class="ident">all_candidates</span> <span class="op">=</span> <span class="ident">submit_candidates</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">v</span>, <span class="string">&quot;candidates&quot;</span>)<span class="question-mark">?</span>;
+		<span class="kw">let</span> <span class="ident">all_candidates</span> <span class="op">=</span> <span class="ident">submit_candidates</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">MAX_CANDIDATES</span>, <span class="string">&quot;candidates&quot;</span>)<span class="question-mark">?</span>;
 		<span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">all_candidates</span>, <span class="ident">v</span>, <span class="ident">MAXIMUM_VOTE</span>)<span class="question-mark">?</span>;
 
 		<span class="comment">// all candidates leave.</span>
@@ -1039,7 +903,7 @@
 		<span class="kw">let</span> <span class="ident">votes_per_voter</span> <span class="op">=</span> (<span class="ident">e</span> <span class="op">/</span> <span class="ident">v</span>).<span class="ident">min</span>(<span class="ident">MAXIMUM_VOTE</span> <span class="kw">as</span> <span class="ident">u32</span>);
 
 		<span class="kw">let</span> <span class="ident">all_candidates</span> <span class="op">=</span> <span class="ident">submit_candidates_with_self_vote</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">c</span>, <span class="string">&quot;candidates&quot;</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">all_candidates</span>, <span class="ident">v</span>, <span class="ident">votes_per_voter</span> <span class="kw">as</span> <span class="ident">usize</span>)<span class="question-mark">?</span>;
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">all_candidates</span>, <span class="ident">v</span>.<span class="ident">saturating_sub</span>(<span class="ident">c</span>), <span class="ident">votes_per_voter</span> <span class="kw">as</span> <span class="ident">usize</span>)<span class="question-mark">?</span>;
 	}: {
 		<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">T::TermDuration::get</span>());
 	}
@@ -1068,7 +932,11 @@
 		<span class="kw">let</span> <span class="ident">votes_per_voter</span> <span class="op">=</span> <span class="ident">e</span> <span class="op">/</span> <span class="ident">fixed_v</span>;
 
 		<span class="kw">let</span> <span class="ident">all_candidates</span> <span class="op">=</span> <span class="ident">submit_candidates_with_self_vote</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">c</span>, <span class="string">&quot;candidates&quot;</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">all_candidates</span>, <span class="ident">fixed_v</span>, <span class="ident">votes_per_voter</span> <span class="kw">as</span> <span class="ident">usize</span>)<span class="question-mark">?</span>;
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">distribute_voters</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+			<span class="ident">all_candidates</span>,
+			<span class="ident">fixed_v</span> <span class="op">-</span> <span class="ident">c</span>,
+			<span class="ident">votes_per_voter</span> <span class="kw">as</span> <span class="ident">usize</span>,
+		)<span class="question-mark">?</span>;
 	}: {
 		<span class="op">&lt;</span><span class="ident">Elections</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">T::TermDuration::get</span>());
 	}
@@ -1090,7 +958,7 @@
 	<span class="attribute">#[<span class="ident">extra</span>]</span>
 	<span class="ident">election_phragmen_v</span> {
 		<span class="kw">let</span> <span class="ident">v</span> <span class="kw">in</span> <span class="number">4</span> .. <span class="number">16</span>;
-		<span class="kw">let</span> <span class="ident">fixed_c</span> <span class="op">=</span> <span class="ident">MAX_CANDIDATES</span>;
+		<span class="kw">let</span> <span class="ident">fixed_c</span> <span class="op">=</span> <span class="ident">MAX_CANDIDATES</span> <span class="op">/</span> <span class="number">10</span>;
 		<span class="kw">let</span> <span class="ident">fixed_e</span> <span class="op">=</span> <span class="number">64</span>;
 		<span class="ident">clean</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
 

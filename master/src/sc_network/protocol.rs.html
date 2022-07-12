@@ -1860,9 +1860,6 @@
 <span id="1855">1855</span>
 <span id="1856">1856</span>
 <span id="1857">1857</span>
-<span id="1858">1858</span>
-<span id="1859">1859</span>
-<span id="1860">1860</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1892,10 +1889,7 @@
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">DecodeAll</span>, <span class="ident">Encode</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">channel::oneshot</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="ident">libp2p</span>::{
-	<span class="ident">core</span>::{
-		<span class="ident">connection</span>::{<span class="ident">ConnectionId</span>, <span class="ident">ListenerId</span>},
-		<span class="ident">ConnectedPoint</span>,
-	},
+	<span class="ident">core</span>::{<span class="ident">connection::ConnectionId</span>, <span class="ident">transport::ListenerId</span>, <span class="ident">ConnectedPoint</span>},
 	<span class="ident">request_response::OutboundFailure</span>,
 	<span class="ident">swarm</span>::{
 		<span class="ident">ConnectionHandler</span>, <span class="ident">IntoConnectionHandler</span>, <span class="ident">NetworkBehaviour</span>, <span class="ident">NetworkBehaviourAction</span>,
