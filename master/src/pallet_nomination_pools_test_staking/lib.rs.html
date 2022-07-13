@@ -628,6 +628,7 @@
 <span id="623">623</span>
 <span id="624">624</span>
 <span id="625">625</span>
+<span id="626">626</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
@@ -656,6 +657,7 @@
 	<span class="ident">PoolState</span>,
 };
 <span class="kw">use</span> <span class="ident">pallet_staking</span>::{<span class="ident">CurrentEra</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">StakingEvent</span>, <span class="ident">Payee</span>, <span class="ident">RewardDestination</span>};
+<span class="kw">use</span> <span class="ident">sp_runtime::traits::Zero</span>;
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">pool_lifecycle_e2e</span>() {
@@ -926,7 +928,7 @@
 			<span class="ident">PoolMember</span> {
 				<span class="ident">pool_id</span>: <span class="number">1</span>,
 				<span class="ident">points</span>: <span class="number">0</span>,
-				<span class="ident">reward_pool_total_earnings</span>: <span class="number">0</span>,
+				<span class="ident">last_recorded_reward_counter</span>: <span class="ident">Zero::zero</span>(),
 				<span class="comment">// the 10 points unlocked just now correspond to 5 points in the unbond pool.</span>
 				<span class="ident">unbonding_eras</span>: <span class="macro">bounded_btree_map!</span>(<span class="number">5</span> =&gt; <span class="number">10</span>, <span class="number">6</span> =&gt; <span class="number">5</span>)
 			}
@@ -981,7 +983,7 @@
 			<span class="ident">PoolMember</span> {
 				<span class="ident">pool_id</span>: <span class="number">1</span>,
 				<span class="ident">points</span>: <span class="number">0</span>,
-				<span class="ident">reward_pool_total_earnings</span>: <span class="number">0</span>,
+				<span class="ident">last_recorded_reward_counter</span>: <span class="ident">Zero::zero</span>(),
 				<span class="ident">unbonding_eras</span>: <span class="macro">bounded_btree_map!</span>(<span class="number">4</span> =&gt; <span class="number">10</span>, <span class="number">5</span> =&gt; <span class="number">10</span>, <span class="number">9</span> =&gt; <span class="number">10</span>)
 			}
 		);

@@ -2167,6 +2167,9 @@
 <span id="2162">2162</span>
 <span id="2163">2163</span>
 <span id="2164">2164</span>
+<span id="2165">2165</span>
+<span id="2166">2166</span>
+<span id="2167">2167</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -2237,7 +2240,7 @@
 		<span class="ident">SaturatedConversion</span>, <span class="ident">StaticLookup</span>,
 	},
 	<span class="ident">transaction_validity</span>::{<span class="ident">TransactionPriority</span>, <span class="ident">TransactionSource</span>, <span class="ident">TransactionValidity</span>},
-	<span class="ident">ApplyExtrinsicResult</span>, <span class="ident">FixedPointNumber</span>, <span class="ident">Perbill</span>, <span class="ident">Percent</span>, <span class="ident">Permill</span>, <span class="ident">Perquintill</span>,
+	<span class="ident">ApplyExtrinsicResult</span>, <span class="ident">FixedPointNumber</span>, <span class="ident">FixedU128</span>, <span class="ident">Perbill</span>, <span class="ident">Percent</span>, <span class="ident">Permill</span>, <span class="ident">Perquintill</span>,
 };
 <span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">test</span>))]</span>
@@ -2899,7 +2902,7 @@
 <span class="macro">parameter_types!</span> {
 	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PostUnbondPoolsWindow</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">4</span>;
 	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NominationPoolsPalletId</span>: <span class="ident">PalletId</span> <span class="op">=</span> <span class="ident">PalletId</span>(<span class="kw-2">*</span><span class="string">b&quot;py/nopls&quot;</span>);
-	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MinPointsToBalance</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">10</span>;
+	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MaxPointsToBalance</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">10</span>;
 }
 
 <span class="kw">use</span> <span class="ident">sp_runtime::traits::Convert</span>;
@@ -2920,6 +2923,8 @@
 	<span class="kw">type</span> <span class="ident">WeightInfo</span> <span class="op">=</span> ();
 	<span class="kw">type</span> <span class="ident">Event</span> <span class="op">=</span> <span class="ident">Event</span>;
 	<span class="kw">type</span> <span class="ident">Currency</span> <span class="op">=</span> <span class="ident">Balances</span>;
+	<span class="kw">type</span> <span class="ident">CurrencyBalance</span> <span class="op">=</span> <span class="ident">Balance</span>;
+	<span class="kw">type</span> <span class="ident">RewardCounter</span> <span class="op">=</span> <span class="ident">FixedU128</span>;
 	<span class="kw">type</span> <span class="ident">BalanceToU256</span> <span class="op">=</span> <span class="ident">BalanceToU256</span>;
 	<span class="kw">type</span> <span class="ident">U256ToBalance</span> <span class="op">=</span> <span class="ident">U256ToBalance</span>;
 	<span class="kw">type</span> <span class="ident">StakingInterface</span> <span class="op">=</span> <span class="ident">pallet_staking::Pallet</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
@@ -2927,7 +2932,7 @@
 	<span class="kw">type</span> <span class="ident">MaxMetadataLen</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">256</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">MaxUnbonding</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">8</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">PalletId</span> <span class="op">=</span> <span class="ident">NominationPoolsPalletId</span>;
-	<span class="kw">type</span> <span class="ident">MinPointsToBalance</span> <span class="op">=</span> <span class="ident">MinPointsToBalance</span>;
+	<span class="kw">type</span> <span class="ident">MaxPointsToBalance</span> <span class="op">=</span> <span class="ident">MaxPointsToBalance</span>;
 }
 
 <span class="macro">parameter_types!</span> {
@@ -3844,6 +3849,7 @@
 	<span class="ident">frame_system::ChainContext</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>,
 	<span class="ident">Runtime</span>,
 	<span class="ident">AllPalletsWithSystem</span>,
+	<span class="ident">pallet_nomination_pools::migration::v2::MigrateToV2</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>,
 <span class="op">&gt;</span>;
 
 <span class="doccomment">/// MMR helper types.</span>

@@ -1415,6 +1415,90 @@
 <span id="1410">1410</span>
 <span id="1411">1411</span>
 <span id="1412">1412</span>
+<span id="1413">1413</span>
+<span id="1414">1414</span>
+<span id="1415">1415</span>
+<span id="1416">1416</span>
+<span id="1417">1417</span>
+<span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
+<span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
+<span id="1438">1438</span>
+<span id="1439">1439</span>
+<span id="1440">1440</span>
+<span id="1441">1441</span>
+<span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
+<span id="1446">1446</span>
+<span id="1447">1447</span>
+<span id="1448">1448</span>
+<span id="1449">1449</span>
+<span id="1450">1450</span>
+<span id="1451">1451</span>
+<span id="1452">1452</span>
+<span id="1453">1453</span>
+<span id="1454">1454</span>
+<span id="1455">1455</span>
+<span id="1456">1456</span>
+<span id="1457">1457</span>
+<span id="1458">1458</span>
+<span id="1459">1459</span>
+<span id="1460">1460</span>
+<span id="1461">1461</span>
+<span id="1462">1462</span>
+<span id="1463">1463</span>
+<span id="1464">1464</span>
+<span id="1465">1465</span>
+<span id="1466">1466</span>
+<span id="1467">1467</span>
+<span id="1468">1468</span>
+<span id="1469">1469</span>
+<span id="1470">1470</span>
+<span id="1471">1471</span>
+<span id="1472">1472</span>
+<span id="1473">1473</span>
+<span id="1474">1474</span>
+<span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
+<span id="1491">1491</span>
+<span id="1492">1492</span>
+<span id="1493">1493</span>
+<span id="1494">1494</span>
+<span id="1495">1495</span>
+<span id="1496">1496</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1441,6 +1525,7 @@
 <span class="doccomment">//! * [`System`](../frame_system/index.html)</span>
 <span class="doccomment">//! * [`Support`](../frame_support/index.html)</span>
 
+<span class="attribute">#![<span class="ident">recursion_limit</span> <span class="op">=</span> <span class="string">&quot;256&quot;</span>]</span>
 <span class="comment">// Ensure we&#39;re `no_std` when compiling for Wasm.</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
 
@@ -1459,8 +1544,11 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">weights</span>;
 
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_support::traits</span>::{
-	<span class="ident">tokens::Locker</span>, <span class="ident">BalanceStatus::Reserved</span>, <span class="ident">Currency</span>, <span class="ident">EnsureOriginWithArg</span>, <span class="ident">ReservableCurrency</span>,
+<span class="kw">use</span> <span class="ident">frame_support</span>::{
+	<span class="ident">traits</span>::{
+		<span class="ident">tokens::Locker</span>, <span class="ident">BalanceStatus::Reserved</span>, <span class="ident">Currency</span>, <span class="ident">EnsureOriginWithArg</span>, <span class="ident">ReservableCurrency</span>,
+	},
+	<span class="ident">transactional</span>,
 };
 <span class="kw">use</span> <span class="ident">frame_system::Config</span> <span class="kw">as</span> <span class="ident">SystemConfig</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{
@@ -1663,6 +1751,18 @@
 	<span class="op">&gt;</span>;
 
 	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
+	<span class="doccomment">/// Price of an asset instance.</span>
+	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type</span> <span class="ident">ItemPriceOf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageDoubleMap</span><span class="op">&lt;</span>
+		<span class="kw">_</span>,
+		<span class="ident">Blake2_128Concat</span>,
+		<span class="ident">T::CollectionId</span>,
+		<span class="ident">Blake2_128Concat</span>,
+		<span class="ident">T::ItemId</span>,
+		(<span class="ident">ItemPrice</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span>),
+		<span class="ident">OptionQuery</span>,
+	<span class="op">&gt;</span>;
+
+	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
 	<span class="doccomment">/// Keeps track of the number of items a collection might have.</span>
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type</span> <span class="ident">CollectionMaxSupply</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span>
 		<span class="ident">StorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Blake2_128Concat</span>, <span class="ident">T::CollectionId</span>, <span class="ident">u32</span>, <span class="ident">OptionQuery</span><span class="op">&gt;</span>;
@@ -1758,6 +1858,23 @@
 		<span class="ident">OwnershipAcceptanceChanged</span> { <span class="ident">who</span>: <span class="ident">T::AccountId</span>, <span class="ident">maybe_collection</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T::CollectionId</span><span class="op">&gt;</span> },
 		<span class="doccomment">/// Max supply has been set for a collection.</span>
 		<span class="ident">CollectionMaxSupplySet</span> { <span class="ident">collection</span>: <span class="ident">T::CollectionId</span>, <span class="ident">max_supply</span>: <span class="ident">u32</span> },
+		<span class="doccomment">/// The price was set for the instance.</span>
+		<span class="ident">ItemPriceSet</span> {
+			<span class="ident">collection</span>: <span class="ident">T::CollectionId</span>,
+			<span class="ident">item</span>: <span class="ident">T::ItemId</span>,
+			<span class="ident">price</span>: <span class="ident">ItemPrice</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>,
+			<span class="ident">whitelisted_buyer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span>,
+		},
+		<span class="doccomment">/// The price for the instance was removed.</span>
+		<span class="ident">ItemPriceRemoved</span> { <span class="ident">collection</span>: <span class="ident">T::CollectionId</span>, <span class="ident">item</span>: <span class="ident">T::ItemId</span> },
+		<span class="doccomment">/// An item was bought.</span>
+		<span class="ident">ItemBought</span> {
+			<span class="ident">collection</span>: <span class="ident">T::CollectionId</span>,
+			<span class="ident">item</span>: <span class="ident">T::ItemId</span>,
+			<span class="ident">price</span>: <span class="ident">ItemPrice</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>,
+			<span class="ident">seller</span>: <span class="ident">T::AccountId</span>,
+			<span class="ident">buyer</span>: <span class="ident">T::AccountId</span>,
+		},
 	}
 
 	<span class="attribute">#[<span class="ident">pallet::error</span>]</span>
@@ -1792,6 +1909,12 @@
 		<span class="ident">MaxSupplyAlreadySet</span>,
 		<span class="doccomment">/// The provided max supply is less to the amount of items a collection already has.</span>
 		<span class="ident">MaxSupplyTooSmall</span>,
+		<span class="doccomment">/// The given item ID is unknown.</span>
+		<span class="ident">UnknownItem</span>,
+		<span class="doccomment">/// Item is not for sale.</span>
+		<span class="ident">NotForSale</span>,
+		<span class="doccomment">/// The provided bid is too low.</span>
+		<span class="ident">BidTooLow</span>,
 	}
 
 	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
@@ -2824,6 +2947,51 @@
 			<span class="ident">CollectionMaxSupply</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>, <span class="ident">max_supply</span>);
 			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::CollectionMaxSupplySet</span> { <span class="ident">collection</span>, <span class="ident">max_supply</span> });
 			<span class="prelude-val">Ok</span>(())
+		}
+
+		<span class="doccomment">/// Set (or reset) the price for an item.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// Origin must be Signed and must be the owner of the asset `item`.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// - `collection`: The collection of the item.</span>
+		<span class="doccomment">/// - `item`: The item to set the price for.</span>
+		<span class="doccomment">/// - `price`: The price for the item. Pass `None`, to reset the price.</span>
+		<span class="doccomment">/// - `buyer`: Restricts the buy operation to a specific account.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// Emits `ItemPriceSet` on success if the price is not `None`.</span>
+		<span class="doccomment">/// Emits `ItemPriceRemoved` on success if the price is `None`.</span>
+		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::set_price</span>())]</span>
+		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_price</span>(
+			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+			<span class="ident">collection</span>: <span class="ident">T::CollectionId</span>,
+			<span class="ident">item</span>: <span class="ident">T::ItemId</span>,
+			<span class="ident">price</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ItemPrice</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+			<span class="ident">whitelisted_buyer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T::Lookup</span> <span class="kw">as</span> <span class="ident">StaticLookup</span><span class="op">&gt;</span><span class="ident">::Source</span><span class="op">&gt;</span>,
+		) -&gt; <span class="ident">DispatchResult</span> {
+			<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+			<span class="kw">let</span> <span class="ident">whitelisted_buyer</span> <span class="op">=</span> <span class="ident">whitelisted_buyer</span>.<span class="ident">map</span>(<span class="ident">T::Lookup::lookup</span>).<span class="ident">transpose</span>()<span class="question-mark">?</span>;
+			<span class="ident"><span class="self">Self</span>::do_set_price</span>(<span class="ident">collection</span>, <span class="ident">item</span>, <span class="ident">origin</span>, <span class="ident">price</span>, <span class="ident">whitelisted_buyer</span>)
+		}
+
+		<span class="doccomment">/// Allows to buy an item if it&#39;s up for sale.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// Origin must be Signed and must not be the owner of the `item`.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// - `collection`: The collection of the item.</span>
+		<span class="doccomment">/// - `item`: The item the sender wants to buy.</span>
+		<span class="doccomment">/// - `bid_price`: The price the sender is willing to pay.</span>
+		<span class="doccomment">///</span>
+		<span class="doccomment">/// Emits `ItemBought` on success.</span>
+		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::buy_item</span>())]</span>
+		<span class="attribute">#[<span class="ident">transactional</span>]</span>
+		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buy_item</span>(
+			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+			<span class="ident">collection</span>: <span class="ident">T::CollectionId</span>,
+			<span class="ident">item</span>: <span class="ident">T::ItemId</span>,
+			<span class="ident">bid_price</span>: <span class="ident">ItemPrice</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>,
+		) -&gt; <span class="ident">DispatchResult</span> {
+			<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+			<span class="ident"><span class="self">Self</span>::do_buy_item</span>(<span class="ident">collection</span>, <span class="ident">item</span>, <span class="ident">origin</span>, <span class="ident">bid_price</span>)
 		}
 	}
 }
