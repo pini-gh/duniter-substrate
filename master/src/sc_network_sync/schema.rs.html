@@ -46,7 +46,7 @@
 
 <span class="doccomment">//! Include sources generated from protobuf definitions.</span>
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v1</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">v1</span> {
 	<span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/api.v1.rs&quot;</span>));
 }
 </code></pre></div>

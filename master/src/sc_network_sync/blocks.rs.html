@@ -455,9 +455,9 @@
 <span class="comment">// You should have received a copy of the GNU General Public License</span>
 <span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::message</span>;
 <span class="kw">use</span> <span class="ident">libp2p::PeerId</span>;
 <span class="kw">use</span> <span class="ident">log::trace</span>;
+<span class="kw">use</span> <span class="ident">sc_network_common::sync::message</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>, <span class="ident">One</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
 	<span class="ident">cmp</span>,
@@ -684,8 +684,8 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
 	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">BlockCollection</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRangeState</span>};
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::message</span>;
 	<span class="kw">use</span> <span class="ident">libp2p::PeerId</span>;
+	<span class="kw">use</span> <span class="ident">sc_network_common::sync::message</span>;
 	<span class="kw">use</span> <span class="ident">sp_core::H256</span>;
 	<span class="kw">use</span> <span class="ident">sp_runtime::testing</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">RawBlock</span>, <span class="ident">ExtrinsicWrapper</span>};
 

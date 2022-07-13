@@ -476,7 +476,7 @@
 	<span class="ident">BlockNumberOps</span>, <span class="ident">GrandpaJustification</span>, <span class="ident">SharedAuthoritySet</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_client_api::Backend</span> <span class="kw">as</span> <span class="ident">ClientBackend</span>;
-<span class="kw">use</span> <span class="ident">sc_network::warp_request_handler</span>::{<span class="ident">EncodedProof</span>, <span class="ident">VerificationResult</span>, <span class="ident">WarpSyncProvider</span>};
+<span class="kw">use</span> <span class="ident">sc_network_common::sync::warp</span>::{<span class="ident">EncodedProof</span>, <span class="ident">VerificationResult</span>, <span class="ident">WarpSyncProvider</span>};
 <span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">Backend</span> <span class="kw">as</span> <span class="ident">BlockchainBackend</span>, <span class="ident">HeaderBackend</span>};
 <span class="kw">use</span> <span class="ident">sp_finality_grandpa</span>::{<span class="ident">AuthorityList</span>, <span class="ident">SetId</span>, <span class="ident">GRANDPA_ENGINE_ID</span>};
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{

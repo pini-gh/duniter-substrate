@@ -416,8 +416,6 @@
 <span id="411">411</span>
 <span id="412">412</span>
 <span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2020 Parity Technologies (UK) Ltd.</span>
 <span class="comment">// This file is part of Substrate.</span>
 
@@ -437,10 +435,7 @@
 <span class="doccomment">//! Helper for handling (i.e. answering) block requests from a remote peer via the</span>
 <span class="doccomment">//! `crate::request_responses::RequestResponsesBehaviour`.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">message::BlockAttributes</span>,
-	<span class="ident">schema::v1</span>::{<span class="ident">block_request::FromBlock</span>, <span class="ident">BlockResponse</span>, <span class="ident">Direction</span>},
-};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::schema::v1</span>::{<span class="ident">block_request::FromBlock</span>, <span class="ident">BlockResponse</span>, <span class="ident">Direction</span>};
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::{
 	<span class="ident">channel</span>::{<span class="ident">mpsc</span>, <span class="ident">oneshot</span>},
@@ -454,6 +449,7 @@
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
 	<span class="ident">config::ProtocolId</span>,
 	<span class="ident">request_responses</span>::{<span class="ident">IncomingRequest</span>, <span class="ident">OutgoingResponse</span>, <span class="ident">ProtocolConfig</span>},
+	<span class="ident">sync::message::BlockAttributes</span>,
 };
 <span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{

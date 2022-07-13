@@ -333,10 +333,6 @@
 <span id="328">328</span>
 <span id="329">329</span>
 <span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -605,13 +601,9 @@
 	<span class="ident">event</span>::{<span class="ident">DhtEvent</span>, <span class="ident">Event</span>, <span class="ident">ObservedRole</span>},
 	<span class="ident">PeerInfo</span>,
 };
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_network_light::light_client_requests</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_network_sync</span>::{
-	<span class="ident">block_request_handler</span>,
-	<span class="ident">state::StateDownloadProgress</span>,
-	<span class="ident">state_request_handler</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_network_common::sync</span>::{
 	<span class="ident">warp</span>::{<span class="ident">WarpSyncPhase</span>, <span class="ident">WarpSyncProgress</span>},
-	<span class="ident">warp_request_handler</span>, <span class="ident">SyncState</span>,
+	<span class="ident">StateDownloadProgress</span>, <span class="ident">SyncState</span>,
 };
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">service</span>::{
 	<span class="ident">DecodingError</span>, <span class="ident">IfDisconnected</span>, <span class="ident">KademliaKey</span>, <span class="ident">Keypair</span>, <span class="ident">NetworkService</span>, <span class="ident">NetworkWorker</span>,

@@ -348,6 +348,8 @@
 <span id="343">343</span>
 <span id="344">344</span>
 <span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -413,10 +415,12 @@
 	<span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 	<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Input</span>, <span class="ident">Output</span>};
 	<span class="kw">use</span> <span class="ident">sc_client_api::StorageProof</span>;
-	<span class="kw">use</span> <span class="ident">sc_network_common::message::RequestId</span>;
-	<span class="kw">use</span> <span class="ident">sc_network_sync::message</span>::{
-		<span class="ident">generic</span>::{<span class="ident">BlockRequest</span>, <span class="ident">BlockResponse</span>},
-		<span class="ident">BlockAnnounce</span>,
+	<span class="kw">use</span> <span class="ident">sc_network_common</span>::{
+		<span class="ident">message::RequestId</span>,
+		<span class="ident">sync::message</span>::{
+			<span class="ident">generic</span>::{<span class="ident">BlockRequest</span>, <span class="ident">BlockResponse</span>},
+			<span class="ident">BlockAnnounce</span>,
+		},
 	};
 	<span class="kw">use</span> <span class="ident">sp_runtime::ConsensusEngineId</span>;
 
