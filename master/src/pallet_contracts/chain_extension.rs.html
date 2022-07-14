@@ -401,6 +401,53 @@
 <span id="396">396</span>
 <span id="397">397</span>
 <span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -431,6 +478,22 @@
 <span class="doccomment">//! trait and declares it in this pallet&#39;s [configuration Trait](crate::Config). All types</span>
 <span class="doccomment">//! required for this endeavour are defined or re-exported in this module. There is an</span>
 <span class="doccomment">//! implementation on `()` which can be used to signal that no chain extension is available.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Using multiple chain extensions</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Often there is a need for having multiple chain extensions. This is often the case when</span>
+<span class="doccomment">//! some generally useful off-the-shelf extensions should be included. To have multiple chain</span>
+<span class="doccomment">//! extensions they can be put into a tuple which is then passed to `[Config::ChainExtension]` like</span>
+<span class="doccomment">//! this `type Extensions = (ExtensionA, ExtensionB)`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! However, only extensions implementing [`RegisteredChainExtension`] can be put into a tuple.</span>
+<span class="doccomment">//! This is because the [`RegisteredChainExtension::ID`] is used to decide which of those extensions</span>
+<span class="doccomment">//! should should be used when the contract calls a chain extensions. Extensions which are generally</span>
+<span class="doccomment">//! useful should claim their `ID` with [the registry](https://github.com/paritytech/chainextension-registry)</span>
+<span class="doccomment">//! so that no collisions with other vendors will occur.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! **Chain specific extensions must use the reserved `ID = 0` so that they can&#39;t be registered with</span>
+<span class="doccomment">//! the registry.**</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Security</span>
 <span class="doccomment">//!</span>
@@ -515,20 +578,51 @@
 	}
 }
 
-<span class="doccomment">/// Implementation that indicates that no chain extension is available.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-	<span class="kw">fn</span> <span class="ident">call</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">_func_id</span>: <span class="ident">u32</span>, <span class="kw-2">mut</span> <span class="ident">_env</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">InitState</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetVal</span><span class="op">&gt;</span>
+<span class="doccomment">/// A [`ChainExtension`] that can be composed with other extensions using a tuple.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// An extension that implements this trait can be put in a tuple in order to have multiple</span>
+<span class="doccomment">/// extensions available. The tuple implementation routes requests based on the first two</span>
+<span class="doccomment">/// most significant bytes of the `func_id` passed to `call`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If this extensions is to be used by multiple runtimes consider</span>
+<span class="doccomment">/// [registering it](https://github.com/paritytech/chainextension-registry) to ensure that there</span>
+<span class="doccomment">/// are no collisions with other vendors.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Note</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Currently, we support tuples of up to ten registred chain extensions. If more chain extensions</span>
+<span class="doccomment">/// are needed consider opening an issue.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RegisteredChainExtension</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span>: <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// The extensions globally unique identifier.</span>
+	<span class="kw">const</span> <span class="ident">ID</span>: <span class="ident">u16</span>;
+}
+
+<span class="attribute">#[<span class="ident">impl_trait_for_tuples::impl_for_tuples</span>(<span class="number">10</span>)]</span>
+<span class="attribute">#[<span class="ident">tuple_types_custom_trait_bound</span>(<span class="ident">RegisteredChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>)]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Tuple</span> {
+	<span class="kw">fn</span> <span class="ident">call</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">func_id</span>: <span class="ident">u32</span>, <span class="kw-2">mut</span> <span class="ident">env</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">InitState</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetVal</span><span class="op">&gt;</span>
 	<span class="kw">where</span>
 		<span class="ident">E</span>: <span class="ident">Ext</span><span class="op">&lt;</span><span class="ident">T</span> <span class="op">=</span> <span class="ident">C</span><span class="op">&gt;</span>,
 		<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
 	{
-		<span class="comment">// Never called since [`Self::enabled()`] is set to `false`. Because we want to</span>
-		<span class="comment">// avoid panics at all costs we supply a sensible error value here instead</span>
-		<span class="comment">// of an `unimplemented!`.</span>
+		<span class="macro">for_tuples!</span>(
+			#(
+				<span class="kw">if</span> (<span class="ident">Tuple::ID</span> <span class="op">==</span> (<span class="ident">func_id</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">16</span>) <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&amp;&amp;</span> <span class="ident">Tuple::enabled</span>() {
+					<span class="kw">return</span> <span class="ident">Tuple::call</span>(<span class="ident">func_id</span>, <span class="ident">env</span>);
+				}
+			)<span class="op">*</span>
+		);
 		<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">E::T</span><span class="op">&gt;</span><span class="ident">::NoChainExtension</span>.<span class="ident">into</span>())
 	}
 
 	<span class="kw">fn</span> <span class="ident">enabled</span>() -&gt; <span class="ident">bool</span> {
+		<span class="macro">for_tuples!</span>(
+			#(
+				<span class="kw">if</span> <span class="ident">Tuple::enabled</span>() {
+					<span class="kw">return</span> <span class="bool-val">true</span>;
+				}
+			)<span class="op">*</span>
+		);
 		<span class="bool-val">false</span>
 	}
 }
