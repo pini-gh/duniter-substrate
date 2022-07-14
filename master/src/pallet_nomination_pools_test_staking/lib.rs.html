@@ -703,7 +703,7 @@
 		<span class="comment">// depositor cannot unbond yet.</span>
 		<span class="macro">assert_noop!</span>(
 			<span class="ident">Pools::unbond</span>(<span class="ident">Origin::signed</span>(<span class="number">10</span>), <span class="number">10</span>, <span class="number">50</span>),
-			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::NotOnlyPoolMember</span>,
+			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::MinimumBondNotMet</span>,
 		);
 
 		<span class="comment">// now the members want to unbond.</span>
@@ -734,7 +734,7 @@
 		<span class="comment">// depositor cannot still unbond</span>
 		<span class="macro">assert_noop!</span>(
 			<span class="ident">Pools::unbond</span>(<span class="ident">Origin::signed</span>(<span class="number">10</span>), <span class="number">10</span>, <span class="number">50</span>),
-			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::NotOnlyPoolMember</span>,
+			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::MinimumBondNotMet</span>,
 		);
 
 		<span class="kw">for</span> <span class="ident">e</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">BondingDuration::get</span>() {
@@ -751,7 +751,7 @@
 		<span class="comment">// depositor cannot still unbond</span>
 		<span class="macro">assert_noop!</span>(
 			<span class="ident">Pools::unbond</span>(<span class="ident">Origin::signed</span>(<span class="number">10</span>), <span class="number">10</span>, <span class="number">50</span>),
-			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::NotOnlyPoolMember</span>,
+			<span class="ident">PoolsError</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::MinimumBondNotMet</span>,
 		);
 
 		<span class="comment">// but members can now withdraw.</span>
