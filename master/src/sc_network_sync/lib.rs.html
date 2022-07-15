@@ -3346,6 +3346,11 @@
 <span id="3341">3341</span>
 <span id="3342">3342</span>
 <span id="3343">3343</span>
+<span id="3344">3344</span>
+<span id="3345">3345</span>
+<span id="3346">3346</span>
+<span id="3347">3347</span>
+<span id="3348">3348</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -5067,7 +5072,7 @@
 		<span class="prelude-val">Ok</span>(<span class="ident">sync</span>)
 	}
 
-	<span class="doccomment">/// Returns the best seen block.</span>
+	<span class="doccomment">/// Returns the best seen block number if we don&#39;t have that block yet, `None` otherwise.</span>
 	<span class="kw">fn</span> <span class="ident">best_seen</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_seens</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">peers</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">best_number</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
@@ -5077,7 +5082,12 @@
 			<span class="kw">let</span> <span class="ident">middle</span> <span class="op">=</span> <span class="ident">best_seens</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span>;
 
 			<span class="comment">// Not the &quot;perfect median&quot; when we have an even number of peers.</span>
-			<span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">best_seens</span>.<span class="ident">select_nth_unstable</span>(<span class="ident">middle</span>).<span class="number">1</span>)
+			<span class="kw">let</span> <span class="ident">median</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">best_seens</span>.<span class="ident">select_nth_unstable</span>(<span class="ident">middle</span>).<span class="number">1</span>;
+			<span class="kw">if</span> <span class="ident">median</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">best_queued_number</span> {
+				<span class="prelude-val">Some</span>(<span class="ident">median</span>)
+			} <span class="kw">else</span> {
+				<span class="prelude-val">None</span>
+			}
 		}
 	}
 
