@@ -37,10 +37,6 @@ fn print_error_message(message: &str) -> String {
 pub(crate) fn check() -> Result<CargoCommandVersioned, String> {
 	let cargo_command = crate::get_nightly_cargo();
 
-	if !cargo_command.is_nightly() {
-		return Err(print_error_message("Rust nightly not installed, please install it!"))
-	}
-
 	check_wasm_toolchain_installed(cargo_command)
 }
 
